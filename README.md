@@ -19,4 +19,4 @@ The Monthly Bill Prediction project utilizes machine learning models to estimate
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Yasiru666/monthly-bill-prediction.git
+   https://github.com/Yasiru666/Electricity-Bill-Prediction.git
