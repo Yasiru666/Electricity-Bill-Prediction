@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Bill Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="upload-section">
+            <h1>Monthly Bill Prediction</h1>
+            <p>Please enter the data to generate the monthly bill prediction.</p>
+            <form id="input-form">
+                <label for="previous_bill">Previous Bill (Rs):</label>
+                <input type="number" id="previous_bill" name="Previous Bill (Rs)" required>
+                <label for="electricity_usage">Electricity Usage (kWh):</label>
+                <input type="number" id="electricity_usage" name="Electricity Usage (kWh)" required>
+                <label for="number_of_occupants">Number of Occupants:</label>
+                <input type="number" id="number_of_occupants" name="Number of Occupants" required>
+                <label for="average_temperature">Average Temperature (F):</label>
+                <input type="number" id="average_temperature" name="Average Temperature (F)" required>
+                <label for="number_of_appliances">Number of Appliances:</label>
+                <input type="number" id="number_of_appliances" name="Number of Appliances" required>
+                
+                <button type="button" onclick="resetForm()">Clear</button>
+                <button type="submit">Submit</button>
+            </form>
+
+
+            <div id="loading" style="display: none;">Processing...</div>
+            <div id="result"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Project by [Group-7]</p>
+        <p>Created by: [Yasiru Bhashana]</p>
+    </footer>
+
+    <script>
+         
+        document.getElementById('input-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            document.getElementById('loading').style.display = 'block';
+
+
+
+            fetch('/predict', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+                if (data.error) {
+                    document.getElementById('result').textContent = `Error: ${data.error}`;
+                } else {
+                    document.getElementById('result').innerHTML = `<strong style="font-size: larger;">Predicted Monthly Bill: Rs.${data.predicted_bill.toFixed(2)} </strong>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'An error occurred. Please try again.';
+            });
+        });
+// Script to reset form
+        function resetForm() {
+            document.getElementById('input-form').reset();
+            document.getElementById('result').textContent = '';
+        }
+    </script>
+</body>
+</html>
+
+
+
